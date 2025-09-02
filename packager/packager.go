@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"../include/packager"
-	"./status"
+	"github.com/SoulPancake/shaka-packager/include/packager"
+	"github.com/SoulPancake/shaka-packager/packager/status"
 )
 
 // PackagerInternal contains the internal state of the packager.
