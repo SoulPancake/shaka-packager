@@ -59,7 +59,7 @@ func (suite *PackagerTestSuite) TestNewPackager() {
 	// Test successful creation
 	packager := NewPackager()
 	suite.NotNil(packager, "NewPackager should return a valid packager instance")
-	suite.NotNil(packager.ptr, "Packager should have a valid internal pointer")
+	suite.True(packager.IsInitialized() == false, "New packager should not be initialized")
 
 	// Test that Close() works without error
 	suite.NotPanics(func() {
@@ -71,8 +71,8 @@ func (suite *PackagerTestSuite) TestNewPackager() {
 		packager.Close()
 	}, "Calling Close twice should be safe")
 
-	// Test that ptr is nil after Close
-	suite.Nil(packager.ptr, "Pointer should be nil after Close()")
+	// Test that packager is not initialized after Close
+	suite.False(packager.IsInitialized(), "Packager should not be initialized after Close()")
 }
 
 // TestPackagerMultipleInstances tests creating multiple packager instances
@@ -290,7 +290,7 @@ func (suite *PackagerTestSuite) TestStatusCodeMapping() {
 	}
 
 	for _, tc := range testCases {
-		err := statusToError(tc.code)
+		err := statusCodeToError(tc.code)
 		if tc.expected == "" {
 			suite.NoError(err, "StatusOK should not produce an error")
 		} else {
@@ -304,18 +304,18 @@ func (suite *PackagerTestSuite) TestStatusCodeMapping() {
 func (suite *PackagerTestSuite) TestBoolToIntConversion() {
 	// Test the helper function through public interface
 	// We can't directly test boolToInt as it's internal, but we can verify behavior
-	
+
 	packager := NewPackager()
 	defer packager.Close()
-	
+
 	params1 := PackagingParams{SingleThreaded: true}
 	params2 := PackagingParams{SingleThreaded: false}
-	
+
 	// These should not panic when using boolean values
 	suite.NotPanics(func() {
 		packager.Initialize(params1, []StreamDescriptor{{Input: "test", StreamSelector: "video"}})
 	}, "Should handle true boolean")
-	
+
 	suite.NotPanics(func() {
 		packager.Initialize(params2, []StreamDescriptor{{Input: "test", StreamSelector: "video"}})
 	}, "Should handle false boolean")
@@ -377,8 +377,8 @@ func (suite *PackagerTestSuite) TestStreamDescriptorFields() {
 
 // TestNilPackagerHandling tests handling of nil packager pointers
 func (suite *PackagerTestSuite) TestNilPackagerHandling() {
-	// Create a packager with nil pointer (simulating creation failure)
-	packager := &Packager{ptr: nil}
+	// Create a packager that's not initialized (simulating creation failure)
+	packager := &Packager{}
 
 	params := PackagingParams{TempDir: suite.tempDir}
 	streams := []StreamDescriptor{
@@ -527,7 +527,7 @@ func BenchmarkGetLibraryVersion(b *testing.B) {
 func BenchmarkStatusToError(b *testing.B) {
 	statuses := []int{StatusOK, StatusUnknown, StatusInvalidArgument, StatusInternal}
 	for i := 0; i < b.N; i++ {
-		_ = statusToError(statuses[i%len(statuses)])
+		_ = statusCodeToError(statuses[i%len(statuses)])
 	}
 }
 

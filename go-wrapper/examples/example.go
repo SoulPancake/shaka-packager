@@ -84,7 +84,7 @@ func main() {
 	fmt.Printf("Output files:\n")
 	fmt.Printf("  - Video: %s\n", filepath.Join(outputDir, "video.mp4"))
 	fmt.Printf("  - Audio: %s\n", filepath.Join(outputDir, "audio.mp4"))
-	
+
 	if params.OutputMediaInfo {
 		fmt.Printf("  - Media info files: %s/*.media_info\n", outputDir)
 	}

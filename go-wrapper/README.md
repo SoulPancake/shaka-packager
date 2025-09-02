@@ -1,30 +1,30 @@
-# Shaka Packager Go Wrapper
+# Shaka Packager Pure Go Implementation
 
-This directory contains a Go wrapper for the shaka-packager C++ library, providing a clean Go interface to the core packaging functionality while maintaining minimal changes to the original C++ codebase.
+This directory contains a pure Go implementation of media packaging functionality, providing native Go media processing capabilities without any C/C++ dependencies.
 
 ## Overview
 
-The Go wrapper demonstrates how to:
-- Interface with the existing C++ Packager class through CGO
-- Provide a clean, idiomatic Go API
-- Maintain compatibility with all core packaging features
-- Ensure proper memory management and error handling
-- Provide comprehensive test coverage
+The pure Go implementation provides:
+- Native Go media packaging functionality
+- Clean, idiomatic Go API
+- Full compatibility with the original API structure
+- Thread-safe operations
+- Comprehensive test coverage
+- No CGO dependencies
 
 ## Architecture
 
-The wrapper consists of several components:
+The implementation consists of:
 
-1. **packager.go** - Main Go interface with CGO bindings
-2. **packager_wrapper.cpp** - C wrapper around the C++ Packager class
-3. **Comprehensive test suites** - Extensive unit and integration tests
+1. **packager.go** - Pure Go implementation with native media processing
+2. **Comprehensive test suites** - Extensive unit and integration tests
+3. **build.sh** - Go-only build script
 
 ## Features Supported
 
 - Media packaging and segmentation
-- DASH and HLS manifest generation
-- Multiple input/output streams
-- Encryption and DRM support
+- Multiple input/output streams  
+- Encryption parameters
 - Chunking/segmentation parameters
 - MP4 output parameters
 
@@ -33,38 +33,25 @@ The wrapper consists of several components:
 ### Prerequisites
 
 - Go 1.21 or later
-- CMake 3.16 or later
-- C++ compiler with C++17 support
-- Built shaka-packager library (../build/libpackager.a)
 
 ### Build Steps
 
-1. Build the main shaka-packager project first:
-   ```bash
-   cd ..
-   mkdir -p build && cd build
-   cmake .. -DCMAKE_BUILD_TYPE=Release
-   make -j$(nproc)
-   ```
+Simply run the build script:
 
-2. Build the Go wrapper:
-   ```bash
-   ./build.sh
-   ```
+```bash
+./build.sh
+```
 
 ### Manual Build
 
 If you prefer to build manually:
 
 ```bash
-# Build C++ wrapper
-mkdir -p build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-cd ..
-
-# Test Go wrapper
+# Download dependencies and build
 go mod download
+go build -v
+
+# Run tests
 go test -v ./...
 ```
 

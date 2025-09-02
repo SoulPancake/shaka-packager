@@ -74,7 +74,7 @@ func (suite *IntegrationTestSuite) TestFullPackagingWorkflow() {
 		},
 		{
 			Input:          filepath.Join(suite.testDataDir, "test_combined.mp4"),
-			StreamSelector: "audio", 
+			StreamSelector: "audio",
 			Output:         filepath.Join(outputDir, "audio.mp4"),
 		},
 	}
@@ -278,7 +278,7 @@ func (suite *ErrorHandlingTestSuite) TestInvalidInputPaths() {
 	}
 }
 
-// TestInvalidOutputPaths tests handling of invalid output paths  
+// TestInvalidOutputPaths tests handling of invalid output paths
 func (suite *ErrorHandlingTestSuite) TestInvalidOutputPaths() {
 	packager := NewPackager()
 	defer packager.Close()
@@ -336,9 +336,9 @@ func (suite *ErrorHandlingTestSuite) TestInvalidStreamSelectors() {
 
 	invalidSelectors := []string{
 		"invalid_stream_type",
-		"999", // Very high index
-		"-1",  // Negative index
-		"",    // Empty selector
+		"999",         // Very high index
+		"-1",          // Negative index
+		"",            // Empty selector
 		"video,audio", // Multiple selectors
 		"stream_with_very_long_name_that_exceeds_reasonable_limits",
 	}
@@ -443,7 +443,7 @@ func (suite *ErrorHandlingTestSuite) TestConcurrentCancellation() {
 	}()
 
 	wg.Wait()
-	
+
 	// Additional cancellation after everything
 	suite.NotPanics(func() {
 		packager.Cancel()
@@ -674,11 +674,11 @@ type CompatibilityTestSuite struct {
 func (suite *CompatibilityTestSuite) TestLibraryVersionFormat() {
 	version := GetLibraryVersion()
 	suite.NotEmpty(version, "Version should not be empty")
-	
+
 	// Basic sanity checks for version string
 	suite.NotContains(version, "\x00", "Version should not contain null bytes")
 	suite.True(len(version) < 1000, "Version should be reasonable length")
-	
+
 	suite.T().Logf("Library version: %s", version)
 }
 
@@ -694,7 +694,7 @@ func (suite *CompatibilityTestSuite) TestStatusCodeConsistency() {
 	}
 
 	for i, code := range allCodes {
-		err := statusToError(code)
+		err := statusCodeToError(code)
 		if code == StatusOK {
 			suite.NoError(err, "StatusOK should not produce error")
 		} else {
